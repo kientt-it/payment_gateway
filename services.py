@@ -10,17 +10,17 @@ DB_CONFIG = {
     "port": os.getenv("DB_PORT", 5432)
 }
 
+
 def insert_transaction(data):
-    """
-    Chèn dữ liệu giao dịch vào PostgreSQL.
-    """
+    connection = None
     try:
+        # Kết nối tới PostgreSQL
         connection = psycopg2.connect(**DB_CONFIG)
         cursor = connection.cursor()
 
-        # Kiểm tra loại giao dịch tiền vào hay ra
-        amount_in = data.get("transferAmount", 0) if data.get("transferType") == "in" else 0
-        amount_out = data.get("transferAmount", 0) if data.get("transferType") == "out" else 0
+        # Chuẩn bị dữ liệu giao dịch
+        amount_in = data.get("transferAmount") if data.get("transferType") == "in" else 0
+        amount_out = data.get("transferAmount") if data.get("transferType") == "out" else 0
 
         # Tạo câu truy vấn SQL
         sql = """
@@ -36,14 +36,17 @@ def insert_transaction(data):
             data.get("code"), data.get("content"), data.get("referenceCode"), data.get("description")
         )
 
-        # Log truy vấn để kiểm tra
-        print("SQL Query:", cursor.mogrify(sql, values))
         cursor.execute(sql, values)
         connection.commit()
         return True
+
+    except psycopg2.OperationalError as e:
+        print(f"Database connection error: {e}")
+        return False
     except Exception as e:
         print(f"Database error: {e}")
         return False
     finally:
         if connection:
             connection.close()
+
