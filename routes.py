@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, render_template
+from flask import Blueprint, request, jsonify, render_template, redirect, url_for, flash
 from services import insert_transaction
 
 # Khởi tạo Blueprint
@@ -46,7 +46,7 @@ def sepay_webhook():
         print("Webhook Data Received:", data)
 
         if insert_transaction(data):
-            return jsonify({"success": True, "message": "Transaction saved successfully"}), 200
+            return redirect(url_for('routes.payment_success', transaction_id=data.get('id'), amount=data.get('transferAmount'), content=data.get('transaction_content')))
         else:
             return jsonify({"success": False, "message": "Failed to save transaction"}), 500
 
@@ -79,6 +79,7 @@ def payment_success():
     """
     transaction_id = request.args.get('transaction_id', "Unknown")
     amount = request.args.get('amount', "0")
+    content = request.args.get('content', "Empty")
 
     return f"""
     <html>
@@ -87,6 +88,7 @@ def payment_success():
             <h1>Thanh toán thành công!</h1>
             <p>Mã giao dịch: {transaction_id}</p>
             <p>Số tiền: {amount} VND</p>
+            <p>Nội dung: {content}</p>
             <a href="/">Quay lại trang chính</a>
         </body>
     </html>

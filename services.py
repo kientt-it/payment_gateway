@@ -10,7 +10,6 @@ DB_CONFIG = {
     "port": os.getenv("DB_PORT", 5432)
 }
 
-
 def insert_transaction(data):
     connection = None
     try:
