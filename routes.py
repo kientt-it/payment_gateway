@@ -9,10 +9,6 @@ def index():
     """
     Hiển thị form nhập thông tin thanh toán và tạo mã QR.
     """
-    
-    # if 0<1:
-    #     return redirect(url_for('routes.payment_success', transaction_id="test", amount="test", content="test"))
-    
     if request.method == 'POST':
         account_number = request.form.get('account_number')
         bank = request.form.get('bank')
@@ -51,12 +47,12 @@ def sepay_webhook():
         print("Webhook Data Received:", data)
         result = insert_transaction(data)
         print(f"Insert transaction result: {result}")
-        
+
         if insert_transaction(data):
-            transaction_id=data.get('id')
-            amount=data.get('transferAmount')
+            id=data.get('id')
+            transferAmount=data.get('transferAmount')
             content=data.get('content')
-            return redirect(url_for('routes.payment_success', transaction_id, amount, content))
+            return redirect(url_for('routes.payment_success'), transaction_id=id, amount=transferAmount, content=content)
         else:
             return jsonify({"success": False, "message": "Failed to save transaction"}), 500
 
