@@ -47,6 +47,10 @@ def sepay_webhook():
         print("Webhook Data Received:", data)
 
         if insert_transaction(data):
+            transaction_id=data.get('id'), 
+            amount=data.get('transferAmount'), 
+            content=data.get('content')
+            print(transaction_id, amount, content)
             return redirect(url_for('routes.payment_success', transaction_id=data.get('id'), amount=data.get('transferAmount'), content=data.get('content')))
         else:
             return jsonify({"success": False, "message": "Failed to save transaction"}), 500
