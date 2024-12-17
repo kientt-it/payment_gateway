@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify, render_template, redirect, url_for, flash
+import requests
 from services import insert_transaction
 
 # Khởi tạo Blueprint
@@ -22,9 +23,6 @@ def index():
 
 @routes.route('/qr_code', methods=['POST', 'GET'])
 def display_qr_code():
-    """
-    Hiển thị QR Code dựa trên thông tin nhập vào.
-    """
     account_number = request.args.get('account_number', "96247BOLJN")
     bank = request.args.get('bank', "BIDV")
     amount = request.args.get('amount', "")
@@ -36,9 +34,6 @@ def display_qr_code():
 
 @routes.route('/webhook', methods=['POST'])
 def sepay_webhook():
-    """
-    Xử lý webhook từ Sepay và lưu dữ liệu vào cơ sở dữ liệu.
-    """
     try:
         data = request.json
         if not data:
@@ -47,17 +42,24 @@ def sepay_webhook():
         print("Webhook Data Received:", data)
 
         if insert_transaction(data):
-            transaction_id=data.get('id'), 
-            amount=data.get('transferAmount'), 
-            content=data.get('content')
-            print(transaction_id, amount, content)
-            return redirect(url_for('routes.payment_success', transaction_id=data.get('id'), amount=data.get('transferAmount'), content=data.get('content')))
+            return jsonify({"success": True, "message": "Transaction saved successfully"}), 200
         else:
             return jsonify({"success": False, "message": "Failed to save transaction"}), 500
 
     except Exception as e:
         print(f"Error processing webhook: {e}")
         return jsonify({"success": False, "message": "An error occurred"}), 500
+    
+@routes.route('/process_webhook', methods=['POST'])
+def process_webhook():
+    response = requests.post('https://payment-gateway-4m16.onrender.com/webhook', json=request.json)
+    data = response.json()
+
+    if data["success"]:
+        return redirect(url_for('routes.payment_success', transaction_id=data.get("id"), amount=data.get("transferAmount"), content=data.get('content')))
+    else:
+        return "Transaction Failed: " + data["message"], 400
+
 
 @routes.route('/callback', methods=['POST'])
 def callback():
@@ -82,7 +84,7 @@ def payment_success():
     """
     Hiển thị thông báo khi thanh toán thành công.
     """
-    transaction_id = request.args.get('id', "Unknown")
+    transaction_id = request.args.get('transaction_id', "Unknown")
     amount = request.args.get('amount', "0")
     content = request.args.get('content', "Empty")
 
