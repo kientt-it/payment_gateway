@@ -82,7 +82,7 @@ def payment_success():
     """
     Hiển thị thông báo khi thanh toán thành công.
     """
-    transaction_id = request.args.get('transaction_id', "Unknown")
+    transaction_id = request.args.get('id', "Unknown")
     amount = request.args.get('amount', "0")
     content = request.args.get('content', "Empty")
 
