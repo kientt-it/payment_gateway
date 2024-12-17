@@ -1,12 +1,13 @@
+import os
 import psycopg2
 
 # Cấu hình kết nối PostgreSQL
 DB_CONFIG = {
-    "host": "localhost",
-    "database": "webhooks_receiver",
-    "user": "webhooks_receiver",
-    "password": "admin",
-     "port": 5432 
+    "host": os.getenv("DB_HOST"),
+    "database": os.getenv("DB_NAME"),
+    "user": os.getenv("DB_USER"),
+    "password": os.getenv("DB_PASSWORD"),
+    "port": os.getenv("DB_PORT", 5432)
 }
 
 def insert_transaction(data):
