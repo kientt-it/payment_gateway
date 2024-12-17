@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Thanh Toán</title>
+</head>
+<body>
+    <h1>Mã QR Thanh Toán</h1>
+    <p>Quét mã QR dưới đây để thanh toán:</p>
+    <img src="https://qr.sepay.vn/img?acc={{ account_number }}&bank={{ bank }}&amount={{ amount }}&des={{ description }}" alt="QR Code" style="width: 300px; height: 300px;"><br>
+    <p>Tài khoản: <strong>{{ account_number }}</strong></p>
+    <p>Ngân hàng <strong>{{ bank }}</strong></p>
+    <p>Số tiền: <strong>{{ amount }} VND</strong></p>
+    <p>Nội dung: <strong>{{ description }}</strong></p>
+
+    <br>
+    <a href="/">Quay lại trang chính</a>
+</body>
+</html>

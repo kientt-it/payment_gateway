@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tạo QR Code</title>
+</head>
+<body>
+    <h1>Tạo QR Code Thanh Toán</h1>
+    <form method="POST" action="/">
+        <label for="account_number">Nội dung thanh toán:</label>
+        <input type="text" id="account_number" name="account_number" required><br><br>
+        
+        <label for="bank">Ngân hàng thụ hưởng:</label>
+        <input type="text" id="bank" name="bank" required><br><br>
+
+        <label for="amount">Số tiền (VND):</label>
+        <input type="number" id="amount" name="amount"><br><br>
+
+        <label for="description">Nội dung thanh toán:</label>
+        <input type="text" id="description" name="description"><br><br>
+
+        <button type="submit">Tạo QR Code</button>
+    </form>
+</body>
+</html>
+    
