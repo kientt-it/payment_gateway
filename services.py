@@ -5,7 +5,8 @@ DB_CONFIG = {
     "host": "localhost",
     "database": "webhooks_receiver",
     "user": "webhooks_receiver",
-    "password": "admin"
+    "password": "admin",
+     "port": 5433 
 }
 
 def insert_transaction(data):
